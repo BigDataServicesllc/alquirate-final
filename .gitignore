@@ -1,0 +1,23 @@
+# Archivos de sistema operativo
+.DS_Store
+
+# Dependencias de Node
+/node_modules
+/frontend/node_modules
+/backend/node_modules
+
+# Archivos de caché y logs
+.cache
+npm-debug.log*
+yarn-error.log
+logs
+
+# Carpetas de build
+/build
+/frontend/build
+
+# Variables de entorno
+.env
+.env.local
+.env.development
+.env.production

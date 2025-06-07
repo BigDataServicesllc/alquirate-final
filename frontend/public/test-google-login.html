@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Test Google Login - AlquiRate</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+    import {
+      getAuth,
+      GoogleAuthProvider,
+      signInWithRedirect,
+      getRedirectResult,
+      browserLocalPersistence,
+      setPersistence
+    } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAKZ-Qmb7Nzq5sRzpOqhWPjOnPmzG33wBU",
+      authDomain: "alquirate-be328.firebaseapp.com",
+      projectId: "alquirate-be328",
+      appId: "1:972818933952:web:35e1d7fe721d21ca332525"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    setPersistence(auth, browserLocalPersistence).then(() => {
+      getRedirectResult(auth).then((result) => {
+        if (result?.user) {
+          document.body.innerHTML = `
+            <h2>✅ Bienvenido ${result.user.email}</h2>
+            <p>Login completado exitosamente desde mobile.</p>
+          `;
+        }
+      }).catch((err) => {
+        console.error("Error en getRedirectResult:", err);
+      });
+
+      document.getElementById("login").addEventListener("click", () => {
+        signInWithRedirect(auth, provider);
+      });
+    });
+  </script>
+</head>
+<body style="text-align: center; padding-top: 100px; font-family: sans-serif;">
+  <h1>Test Login Google - AlquiRate</h1>
+  <button id="login" style="font-size: 20px; padding: 12px 28px; border-radius: 8px; background: #4285F4; color: white; border: none;">
+    Iniciar sesión con Google
+  </button>
+</body>
+</html>

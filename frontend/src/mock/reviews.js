@@ -1,0 +1,72 @@
+export const reviews = [
+  {
+    id: 1,
+    propertyId: 1,
+    userId: "user123",
+    userName: "María López",
+    rating: 4.5,
+    title: "Excelente departamento en Palermo",
+    comment: "El departamento es muy luminoso y está muy bien ubicado. El dueño siempre respondió rápido a mis consultas y fue muy amable. Lo único negativo es que a veces se escuchan ruidos de la calle, pero nada grave.",
+    pros: ["Buena ubicación", "Luminoso", "Dueño atento"],
+    cons: ["Algo ruidoso"],
+    date: "2023-05-15",
+    rentalPeriod: "1 año",
+    wouldRecommend: true
+  },
+  {
+    id: 2,
+    propertyId: 1,
+    userId: "user456",
+    userName: "Juan Pérez",
+    rating: 3.8,
+    title: "Buena relación precio-calidad",
+    comment: "El departamento está bien para el precio que se paga. La ubicación es excelente, cerca de todo. Tuve algunos problemas con la calefacción que tardaron en solucionar, pero en general fue una buena experiencia.",
+    pros: ["Buena ubicación", "Precio razonable"],
+    cons: ["Problemas con la calefacción", "Baño pequeño"],
+    date: "2023-03-22",
+    rentalPeriod: "6 meses",
+    wouldRecommend: true
+  },
+  {
+    id: 3,
+    propertyId: 2,
+    userId: "user789",
+    userName: "Pedro Sánchez",
+    rating: 4.0,
+    title: "Monoambiente bien aprovechado",
+    comment: "El departamento es pequeño pero está muy bien aprovechado el espacio. La cocina es funcional y el baño está renovado. La dueña tardó en resolver un problema con la heladera, ese fue el único inconveniente.",
+    pros: ["Bien diseñado", "Baño renovado", "Buena seguridad"],
+    cons: ["Dueña poco responsiva", "Cocina pequeña"],
+    date: "2023-04-10",
+    rentalPeriod: "8 meses",
+    wouldRecommend: true
+  },
+  {
+    id: 4,
+    propertyId: 3,
+    userId: "user101",
+    userName: "Ana Fernández",
+    rating: 5.0,
+    title: "Casa espectacular en Belgrano",
+    comment: "La casa es increíble, muy espaciosa y bien mantenida. El jardín es hermoso y la parrilla funciona perfectamente. El dueño siempre estuvo atento a cualquier necesidad. Totalmente recomendable para familias.",
+    pros: ["Espaciosa", "Bien mantenida", "Jardín hermoso", "Dueño atento"],
+    cons: [],
+    date: "2023-06-05",
+    rentalPeriod: "2 años",
+    wouldRecommend: true
+  },
+  {
+    id: 5,
+    propertyId: 4,
+    userId: "user202",
+    userName: "Diego Martínez",
+    rating: 3.0,
+    title: "Buena ubicación pero necesita mantenimiento",
+    comment: "La ubicación del departamento es excelente, en pleno centro de Córdoba. Sin embargo, necesita bastante mantenimiento. La ducha pierde agua y algunos enchufes no funcionan. La dueña no responde rápido a los problemas.",
+    pros: ["Ubicación céntrica", "Buen precio"],
+    cons: ["Falta mantenimiento", "Dueña poco responsiva", "Problemas con instalaciones"],
+    date: "2023-05-20",
+    rentalPeriod: "1 año",
+    wouldRecommend: false
+  }
+];

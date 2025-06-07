@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* src/styles.css */
+
+/* --- Estilos para el carrusel de testimonios --- */
+
+/* Apuntamos a la lista de slides dentro de nuestro carrusel específico */
+.testimonial-slider .slick-track {
+  display: flex !important; /* Forzamos el modo flex en el contenedor directo de los slides */
+}
+
+/* Apuntamos a cada slide individual */
+.testimonial-slider .slick-slide {
+  height: inherit !important; /* Le decimos al slide que herede la altura del contenedor flex */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Apuntamos al div interno que react-slick crea */
+.testimonial-slider .slick-slide > div {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Y finalmente, nos aseguramos de que nuestra tarjeta ocupe todo el espacio */
+.testimonial-slider .slick-slide .h-full {
+  flex-grow: 1; /* Hacemos que la tarjeta crezca para ocupar el espacio vertical disponible */
+}

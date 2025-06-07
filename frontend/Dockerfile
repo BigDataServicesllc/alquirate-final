@@ -1,0 +1,49 @@
+# Etapa 1: build del proyecto React
+FROM node:18 AS builder
+
+WORKDIR /app
+
+# Copiamos solo lo necesario primero (para aprovechar cache si cambia algo)
+COPY package.json ./
+COPY package-lock.json ./
+
+RUN npm install
+
+# Copiar el resto del código
+COPY . .
+
+# 👇 Asegurar que las variables se pasen en tiempo de build
+ARG REACT_APP_FIREBASE_API_KEY
+ARG REACT_APP_FIREBASE_AUTH_DOMAIN
+ARG REACT_APP_FIREBASE_PROJECT_ID
+ARG REACT_APP_FIREBASE_STORAGE_BUCKET
+ARG REACT_APP_FIREBASE_MESSAGING_SENDER_ID
+ARG REACT_APP_FIREBASE_APP_ID
+ARG REACT_APP_FIREBASE_MEASUREMENT_ID
+ARG REACT_APP_GOOGLE_MAPS_API_KEY
+ARG REACT_APP_LOGIN_REDIRECT_URL
+
+
+# 👇 Estas variables se vuelven parte del entorno temporalmente para el build
+ENV REACT_APP_FIREBASE_API_KEY=$REACT_APP_FIREBASE_API_KEY
+ENV REACT_APP_FIREBASE_AUTH_DOMAIN=$REACT_APP_FIREBASE_AUTH_DOMAIN
+ENV REACT_APP_FIREBASE_PROJECT_ID=$REACT_APP_FIREBASE_PROJECT_ID
+ENV REACT_APP_FIREBASE_STORAGE_BUCKET=$REACT_APP_FIREBASE_STORAGE_BUCKET
+ENV REACT_APP_FIREBASE_MESSAGING_SENDER_ID=$REACT_APP_FIREBASE_MESSAGING_SENDER_ID
+ENV REACT_APP_FIREBASE_APP_ID=$REACT_APP_FIREBASE_APP_ID
+ENV REACT_APP_FIREBASE_MEASUREMENT_ID=$REACT_APP_FIREBASE_MEASUREMENT_ID
+ENV REACT_APP_GOOGLE_MAPS_API_KEY=$REACT_APP_GOOGLE_MAPS_API_KEY
+ENV REACT_APP_LOGIN_REDIRECT_URL=$REACT_APP_LOGIN_REDIRECT_URL
+
+# 👇 Ahora el build va a tener acceso a las variables de entorno
+RUN npm run build
+
+# Etapa 2: usar Nginx para servir la app
+FROM nginx:alpine
+
+COPY --from=builder /app/build /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
