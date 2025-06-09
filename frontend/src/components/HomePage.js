@@ -7,6 +7,9 @@ import Slider from 'react-slick';
 import TestimonialCard from './TestimonialCard';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
+import { useAuth } from '../contexts/AuthContext'; // Importamos nuestro hook useAuth
+
+import { useNavigate } from 'react-router-dom'; // 1. Importa useNavigate
 
 // 2. Datos para los testimonios
 const testimonialsData = [
@@ -30,8 +33,12 @@ const testimonialsData = [
   }
 ];
 
-const HomePage = ({ setCurrentPage }) => {
+const HomePage = ({ setCurrentPage, setShowLoginModal }) => { 
+  const navigate = useNavigate();
+  const { user } = useAuth(); 
   
+  
+  const { currentUser, setRedirectPage } = useAuth();
   // 3. Configuración del carrusel
   const sliderSettings = {
     dots: true,
@@ -52,6 +59,17 @@ const HomePage = ({ setCurrentPage }) => {
     ]
   };
 
+  const handleCalificarClick = () => {
+    if (user) {
+      // Esto está perfecto: si está logueado, va a la página de calificar.
+      setCurrentPage('addReview');
+    } else {
+      // 👇 ¡AQUÍ ESTÁ LA MAGIA!
+      // En lugar de navegar, mostramos el modal.
+      setShowLoginModal(true); 
+    }
+  };
+
   return (
     <div className="pt-16">
       {/* --- SECCIÓN HERO (Tu código original) --- */}
@@ -69,7 +87,7 @@ const HomePage = ({ setCurrentPage }) => {
             Calificá propiedades, consultá precios y decidí con datos reales.
           </p>
           <button 
-            onClick={() => setCurrentPage('addReview')}
+            onClick={handleCalificarClick} // 6. Asignamos nuestra función al evento onClick
             className="bg-white text-blue-700 hover:bg-gray-100 px-8 py-3 rounded-lg text-lg font-semibold transition-colors shadow-lg"
           >
             Calificar una propiedad
@@ -218,8 +236,8 @@ const HomePage = ({ setCurrentPage }) => {
               viewport={{ once: true }}
             >
               <button 
-                onClick={() => setCurrentPage('addReview')}
-                className="bg-blue-600 text-white hover:bg-blue-700 px-10 py-4 rounded-lg text-lg font-semibold transition-colors shadow-lg"
+                onClick={handleCalificarClick} // Asignamos nuestra función al evento onClick
+                className="bg-white text-blue-700 hover:bg-gray-100 px-8 py-3 rounded-lg text-lg font-semibold transition-colors shadow-lg"
               >
                 Calificar mi última propiedad
               </button>

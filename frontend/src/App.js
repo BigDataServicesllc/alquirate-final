@@ -15,6 +15,7 @@ import TermsAndConditionsPage from './Pages/TermsAndConditionsPage';
 import PrivacyPolicyPage from './Pages/PrivacyPolicyPage';
 import AddReviewPage from './components/AddReviewPage';
 import MyReviewsPage from './components/MyReviewsPage';
+
 // Firebase y Toastify
 import { auth, createUserProfileDocument, sendEmailVerification, createUserWithEmailAndPassword } from './utils/firebase'; 
 import { ToastContainer, toast } from 'react-toastify';
@@ -163,7 +164,7 @@ const handleRegister = async (formData) => {
 
     // ✅ Switch completo con todos tus componentes restaurados
     switch (currentPage) {
-      case 'home': return <HomePage setCurrentPage={navigateTo} />;
+      case 'home': return <HomePage setCurrentPage={navigateTo} setShowLoginModal={setShowLoginModal} />;
       case 'rankings': return <RankingsPage onLocalityClick={handleNavigateToLocality} />;
       case 'profile': return <ProfilePage />;
       case 'addReview': return <AddReviewPage setCurrentPage={navigateTo} />;
