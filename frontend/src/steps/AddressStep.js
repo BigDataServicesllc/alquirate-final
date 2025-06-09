@@ -20,10 +20,16 @@ const AddressStep = ({ formData, setFormData, errors }) => {
 
   const handleLocalInputChange = (e) => {
     const { name, value } = e.target;
+    console.log(`--- handleLocalInputChange ---`);
+    console.log(`Input Name: ${name}, Input Value: ${value}`);
 
     if (name === 'propertyProvince') {
       const provinceObject = provinces.find(p => p.name === value);
+      // LOG 1: ¿Se encontró el objeto de la provincia?
+      console.log('Provincia seleccionada (objeto):', provinceObject);
       const newSelectedProvinceId = provinceObject ? provinceObject.id : '';
+      // LOG 2: ¿Cuál es el nuevo ID de provincia que se va a setear?
+      console.log('Nuevo ID de provincia a setear:', newSelectedProvinceId);
       setSelectedProvinceId(newSelectedProvinceId); // Actualiza el ID para cargar los partidos
       
       // Actualiza el nombre de la provincia en formData y resetea partido y localidad
@@ -89,18 +95,42 @@ useEffect(() => {
 
   const fetchParties = async () => {
     setLoadingParties(true);
-    setParties([]); // Limpiar lista anterior
-    setLocalities([]);
+    setParties([]);
     setSelectedPartyId('');
+    setLocalities([]);
 
     try {
       const partiesCol = collection(db, 'parties');
-      const q = firestoreQuery(
-        partiesCol,
-        where('provinceId', '==', selectedProvinceId),
-        orderBy('comunaNumber'),
-        orderBy('name') // Orden alfabético, opcional
-      );
+      
+      // --- LÓGICA CONDICIONAL AQUÍ ---
+      // Primero, necesitamos el nombre de la provincia para decidir
+      const provinceObject = provinces.find(p => p.id === selectedProvinceId);
+      // Usamos el nombre normalizado para evitar errores de mayúsculas/minúsculas
+      const isCABA = provinceObject && provinceObject.name_normalized === 'ciudad autonoma de buenos aires';
+
+      let q; // Declaramos la variable de la consulta
+
+      console.log(`¿Es CABA? ${isCABA}`); // Log de depuración
+
+      if (isCABA) {
+        // Si es CABA, usamos la consulta que incluye 'comunaNumber'
+        console.log("Construyendo consulta para CABA...");
+        q = firestoreQuery(
+          partiesCol,
+          where('provinceId', '==', selectedProvinceId),
+          orderBy('comunaNumber'),
+          orderBy('name')
+        );
+      } else {
+        // Para TODAS las demás provincias, usamos la consulta simple
+        console.log("Construyendo consulta para otra provincia...");
+        q = firestoreQuery(
+          partiesCol,
+          where('provinceId', '==', selectedProvinceId),
+          orderBy('name') // Solo ordenamos por nombre
+        );
+      }
+      // --- FIN DE LA LÓGICA CONDICIONAL ---
 
       const partySnapshot = await getDocs(q);
 
@@ -111,10 +141,13 @@ useEffect(() => {
         provinceId: doc.data().provinceId
         // Podés incluir otros campos como comunaNumber si lo usás
       }));
+      // LOG 6: ¿La lista de partidos se mapeó correctamente?
+      console.log('Lista de partidos procesada:', partyList);
 
       setParties(partyList);
     } catch (error) {
-      console.error("Error cargando partidos:", error);
+      // LOG 7: ¿Hubo algún error durante la consulta?
+      console.error("Error en fetchParties:", error);
     } finally {
       setLoadingParties(false);
     }
