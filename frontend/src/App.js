@@ -49,12 +49,12 @@ const App = () => {
   const initialState = getInitialStateFromPath();
   const [currentPage, setCurrentPage] = useState(initialState.page);
   const [selectedLocalityId, setSelectedLocalityId] = useState(initialState.localityId);
-
   const [showLoginModal, setShowLoginModal] = useState(false);
   const { currentUser, loadingAuth } = useAuth();
 
-  // El useEffect de popstate original que tenías
+  console.log(`%cAPP RENDER: La página actual es '${currentPage}'`, "color: blue;");
   useEffect(() => {
+    console.log(`%cAPP useEffect disparado. currentUser ha cambiado. La página actual es '${currentPage}'`, "color: red;");
     const handlePopState = () => {
       const state = getInitialStateFromPath();
       setCurrentPage(state.page);
@@ -74,6 +74,7 @@ const App = () => {
         }
       } else {
         if (['pleaseVerifyEmail', 'login', 'registro'].includes(currentPage)) {
+          console.log(`%cAPP useEffect ¡ACCIÓN! Redirigiendo a 'profile' porque la página es '${currentPage}'`, "color: red; font-weight: bold;");
           navigateTo('profile');
         }
       }
