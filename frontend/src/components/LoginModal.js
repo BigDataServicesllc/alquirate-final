@@ -9,8 +9,10 @@ import {
 } from 'firebase/auth';
 import { FaGoogle } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import { useAuth } from '../contexts/AuthContext';
 
 const LoginModal = ({ onClose, setCurrentPage }) => {
+  const { redirectPage, setRedirectPage } = useAuth(); // <--- AGREGAR ESTA LÍNEA
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -44,11 +46,21 @@ const LoginModal = ({ onClose, setCurrentPage }) => {
         return; // No cerrar el modal, no continuar.
       }
   
+      // DENTRO DE handleEmailLogin
+
       // Si el email está verificado, proceder normalmente
-      console.log("LoginModal: Usuario verificado, cerrando modal.");
+      console.log("LoginModal: Usuario verificado, procesando redirección.");
       toast.success(`¡Bienvenido de nuevo!`);
-      onClose(); // Cierra el modal y permite el acceso
-      // El AuthContext se encargará de actualizar el estado global del usuario
+
+      if (redirectPage) {
+          console.log(`PASO 2 (LoginModal): ¡Éxito! Intentando cambiar a la página: '${redirectPage}'`);
+          // Usamos la lógica simplificada que acordamos
+          setCurrentPage(redirectPage); 
+          setRedirectPage(null);
+          onClose(); // <-- SE CIERRA AQUÍ, DESPUÉS DE NAVEGAR
+      } else {
+          onClose(); // <-- SI NO HAY REDIRECCIÓN, TAMBIÉN SE CIERRA
+      }
 
     } catch (error) {
       console.error("❌ Error al iniciar sesión (LoginModal):", error);
@@ -82,23 +94,31 @@ const LoginModal = ({ onClose, setCurrentPage }) => {
     }
   };
 
-  const handleGoogleLogin = async () => { // Convertido a async para manejar isLoading
+  // CÓDIGO CORREGIDO
+  const handleGoogleLogin = async () => {
     setIsLoading(true);
     try {
-      await signInWithPopup(auth, googleProvider);
-      // El onAuthStateChanged en AuthContext manejará el cierre del modal si el login es exitoso
-      // y si el usuario de Google ya está verificado (lo cual suele ser el caso).
-      // Si necesitaras verificar algo específico del usuario de Google antes de cerrar, lo harías aquí.
-      onClose(); // Asumimos que el login de Google es exitoso y verificado.
-    } catch (error) {
-      console.error("❌ Error al iniciar sesión con Google:", error);
-      toast.error("Error al iniciar sesión con Google.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+        await signInWithPopup(auth, googleProvider);
+        toast.success(`¡Bienvenido!`);
 
-  const handlePasswordResetWrapped = async (e) => { // Wrapper para manejar isLoading
+        if (redirectPage) {
+            console.log(`PASO 2 (LoginModal / Google): ¡Éxito! Intentando cambiar a la página: '${redirectPage}'`);
+            setCurrentPage(redirectPage);
+            setRedirectPage(null);
+            onClose(); // <-- SE CIERRA AQUÍ, DESPUÉS DE NAVEGAR
+        } else {
+            onClose(); // <-- SI NO HAY REDIRECCIÓN, TAMBIÉN SE CIERRA
+        }
+        
+    } catch (error) {
+        console.error("❌ Error al iniciar sesión con Google:", error);
+        toast.error("Error al iniciar sesión con Google.");
+    } finally {
+        setIsLoading(false);
+    }
+};
+
+  const handlePasswordResetWrapped = async (e) => {
     e.preventDefault();
     if (!email) {
       setMessage('Ingresá tu correo para recuperar la contraseña.');
@@ -116,7 +136,7 @@ const LoginModal = ({ onClose, setCurrentPage }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+};
 
 
   return (

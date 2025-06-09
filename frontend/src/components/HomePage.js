@@ -34,12 +34,8 @@ const testimonialsData = [
 ];
 
 const HomePage = ({ setCurrentPage, setShowLoginModal }) => { 
-  const navigate = useNavigate();
-  const { user } = useAuth(); 
   
-  
-  const { currentUser, setRedirectPage } = useAuth();
-  // 3. Configuración del carrusel
+  const { currentUser: user, setRedirectPage } = useAuth();
   const sliderSettings = {
     dots: true,
     infinite: true,
@@ -59,16 +55,16 @@ const HomePage = ({ setCurrentPage, setShowLoginModal }) => {
     ]
   };
 
-  const handleCalificarClick = () => {
-    if (user) {
-      // Esto está perfecto: si está logueado, va a la página de calificar.
-      setCurrentPage('addReview');
-    } else {
-      // 👇 ¡AQUÍ ESTÁ LA MAGIA!
-      // En lugar de navegar, mostramos el modal.
-      setShowLoginModal(true); 
-    }
-  };
+const handleCalificarClick = () => {
+  if (user) {
+    console.log("HomePage: Usuario ya logueado. Navegando a addReview.");
+    setCurrentPage('addReview');
+  } else {
+    console.log("%cPASO 1 (HomePage): Guardando redirectPage como 'addReview'", "color: green; font-weight: bold;");
+    setRedirectPage('addReview'); 
+    setShowLoginModal(true); 
+  }
+};
 
   return (
     <div className="pt-16">
