@@ -14,6 +14,7 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [redirectPage, setRedirectPage] = useState(null); 
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -38,6 +39,8 @@ export function AuthProvider({ children }) {
     currentUser,
     userProfile,
     loading,
+    redirectPage,
+    setRedirectPage,
     // NO exportamos ninguna función de refresco. Lo haremos más simple.
   };
 
