@@ -203,11 +203,6 @@ return (
                 totalReviews={localityData.zoneReviewCount}
               />
               <AspectPercentage
-                label="Con Gimnasios Cercanos"
-                count={localityData.hasGymCount}
-                totalReviews={localityData.zoneReviewCount}
-              />
-              <AspectPercentage
                 label="Con Espacios Verdes Cercanos"
                 count={localityData.hasGreenSpacesCount}
                 totalReviews={localityData.zoneReviewCount}
@@ -219,6 +214,85 @@ return (
           </InfoCard>
         </div>
       )}
+      {/* --- INICIO: NUEVA SECCIÓN DE OCIO Y SERVICIOS --- */}
+      {/* Solo se muestra si hay reseñas de la zona para evitar dividir por cero */}
+      {localityData.zoneReviewCount > 0 && (
+        <div className="mt-8">
+          <InfoCard icon="🍿" title="Ocio y Servicios en la Zona">
+            
+            {/* Usamos un grid para que se vea bien en pantallas grandes */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+
+              {/* Columna Izquierda */}
+              <div className="space-y-2">
+                <AspectPercentage
+                  label="Parques / Plazas"
+                  count={localityData.hasParksCount}
+                  totalReviews={localityData.zoneReviewCount}
+                />
+                <AspectPercentage
+                  label="Restaurantes"
+                  count={localityData.hasRestaurantsCount}
+                  totalReviews={localityData.zoneReviewCount}
+                />
+                <AspectPercentage
+                  label="Bares"
+                  count={localityData.hasBarsCount}
+                  totalReviews={localityData.zoneReviewCount}
+                />
+                <AspectPercentage
+                  label="Centros Comerciales"
+                  count={localityData.hasMallsCount}
+                  totalReviews={localityData.zoneReviewCount}
+                />
+                <AspectPercentage
+                  label="Estaciones Ecobici"
+                  count={localityData.hasEcobiciCount}
+                  totalReviews={localityData.zoneReviewCount}
+                />
+              </div>
+
+              {/* Columna Derecha */}
+              <div className="space-y-2">
+                <AspectPercentage
+                  label="Cines"
+                  count={localityData.hasCinemasCount}
+                  totalReviews={localityData.zoneReviewCount}
+                />
+                <AspectPercentage
+                  label="Teatros"
+                  count={localityData.hasTheatersCount}
+                  totalReviews={localityData.zoneReviewCount}
+                />
+                <AspectPercentage
+                  label="Clubes Nocturnos"
+                  count={localityData.hasClubsCount}
+                  totalReviews={localityData.zoneReviewCount}
+                />
+                <AspectPercentage
+                  label="Educación (Jardín/Colegio/Uni)"
+                  count={localityData.hasKindergartenCount}
+                  totalReviews={localityData.zoneReviewCount}
+                />
+                 {/* El de Gimnasios ya estaba en la otra tarjeta, 
+                     pero lo podemos dejar aquí también para agrupar todo lo relacionado a servicios.
+                     Si prefieres quitarlo de la tarjeta anterior, también es válido. */
+                 }
+                <AspectPercentage
+                  label="Gimnasios"
+                  count={localityData.hasGymCount}
+                  totalReviews={localityData.zoneReviewCount}
+                />
+              </div>
+            </div>
+
+            <p className="text-xs text-gray-400 mt-4 pt-4 border-t border-gray-100">
+              Basado en {localityData.zoneReviewCount} calificaciones de la zona.
+            </p>
+          </InfoCard>
+        </div>
+      )}
+      {/* --- FIN: NUEVA SECCIÓN DE OCIO Y SERVICIOS --- */}
     </div>
   );
   };
