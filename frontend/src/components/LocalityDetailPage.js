@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { db } from '../utils/firebase';
-import { doc, getDoc, collection, query, where, getDocs, limit, orderBy } from 'firebase/firestore';
+// LÍNEA CORREGIDA
+import { doc, getDoc, collection, query, where, getDocs, limit, orderBy, startAfter } from 'firebase/firestore';
 
 // ✅ PASO 1: Definimos los componentes y funciones auxiliares FUERA y ANTES.
 const AspectRating = ({ label, value, totalReviews, descriptions }) => {
@@ -73,7 +74,53 @@ const LocalityDetailPage = ({ localityId, onBack }) => { // <--- Asegúrate que 
   const [recentReviews, setRecentReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // --- INICIO DE NUESTROS CAMBIOS ---
+  // Guardará el último documento que vimos, para saber desde dónde empezar a cargar más.
+  const [lastVisible, setLastVisible] = useState(null); 
+  // Nos dirá si hay más comentarios disponibles para cargar.
+  const [hasMore, setHasMore] = useState(true);
+  // Para mostrar un spinner en el botón "Cargar más" mientras se cargan.
+  const [loadingMore, setLoadingMore] = useState(false);
+  // --- FIN DE NUESTROS CAMBIOS ---
 
+  const handleLoadMore = async () => {
+  if (!lastVisible || !hasMore) return; // No hacer nada si no hay más por cargar
+
+    setLoadingMore(true); // Activar el spinner del botón
+
+    try {
+      const nextReviewsQuery = query(
+        collection(db, 'reviewsId'),
+        where('localityId', '==', localityId),
+        where('isApproved', '==', true),
+        orderBy('createdAt', 'desc'),
+        startAfter(lastVisible), // <-- La magia de la paginación
+        limit(3) // Cargamos de 3 en 3
+      );
+
+      const documentSnapshots = await getDocs(nextReviewsQuery);
+
+      const newReviews = documentSnapshots.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+      // Añadimos los nuevos comentarios a la lista existente
+      setRecentReviews(prevReviews => [...prevReviews, ...newReviews]);
+
+      // Actualizamos el último documento visible
+      const newLastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1];
+      setLastVisible(newLastVisible);
+
+      // Si este lote tiene menos de 3, ya no hay más por cargar
+      if (documentSnapshots.docs.length < 3) {
+        setHasMore(false);
+      }
+
+    } catch (err) {
+      console.error("Error cargando más comentarios:", err);
+      // Opcional: mostrar un toast de error al usuario
+    }
+
+    setLoadingMore(false); // Desactivar el spinner del botón
+  };
   useEffect(() => {
     if (!localityId) return;
 
@@ -81,28 +128,40 @@ const LocalityDetailPage = ({ localityId, onBack }) => { // <--- Asegúrate que 
       setLoading(true);
       setError(null);
       try {
+        // Primero, obtenemos los datos del ranking
         const rankingDocRef = doc(db, 'localityRankings', localityId);
-        const reviewsQuery = query(
-          collection(db, 'reviewsId'),
-          where('localityId', '==', localityId),
-          where('isApproved', '==', true),
-          orderBy('createdAt', 'desc'), // Necesitarás un índice para esto
-          limit(3)
-        );
-
-        const [rankingDocSnap, reviewsSnap] = await Promise.all([
-          getDoc(rankingDocRef),
-          getDocs(reviewsQuery)
-        ]);
+        const rankingDocSnap = await getDoc(rankingDocRef); // <-- Definimos rankingDocSnap
 
         if (rankingDocSnap.exists()) {
           setLocalityData(rankingDocSnap.data());
         } else {
           throw new Error("No se encontraron datos de ranking para esta localidad.");
         }
-        
+
+        // Segundo, obtenemos el primer lote de reseñas
+        const reviewsQuery = query(
+          collection(db, 'reviewsId'),
+          where('localityId', '==', localityId),
+          where('isApproved', '==', true),
+          orderBy('createdAt', 'desc'),
+          limit(3)
+        );
+
+        const reviewsSnap = await getDocs(reviewsQuery); // <-- Definimos reviewsSnap
+
         const reviews = reviewsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setRecentReviews(reviews);
+
+        // Guardamos el último documento para la paginación
+        const lastVisibleDoc = reviewsSnap.docs[reviewsSnap.docs.length - 1];
+        setLastVisible(lastVisibleDoc);
+
+        // Comprobamos si hay más reseñas para cargar
+        if (reviewsSnap.docs.length < 3) {
+          setHasMore(false);
+        } else {
+          setHasMore(true); // Aseguramos que se reinicie en cada carga
+        }
 
       } catch (err) {
         console.error("Error fetching locality details:", err);
@@ -182,6 +241,21 @@ return (
                 ))}
               </div>
             ) : ( <p className="text-gray-500">No hay comentarios para esta zona.</p> )}
+
+            {/* --- INICIO DE NUESTROS CAMBIOS --- */}
+            {/* Mostramos el botón solo si hay más comentarios por cargar */}
+            {hasMore && (
+              <div className="mt-6 text-center">
+                <button
+                  onClick={handleLoadMore}
+                  disabled={loadingMore}
+                  className="px-4 py-2 bg-blue-100 text-blue-700 font-semibold rounded-lg hover:bg-blue-200 disabled:opacity-50 disabled:cursor-wait"
+                >
+                  {loadingMore ? 'Cargando...' : 'Cargar más comentarios'}
+                </button>
+              </div>
+            )}
+            {/* --- FIN DE NUESTROS CAMBIOS --- */}
           </InfoCard>
         </div>
       </div>
