@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { auth } from '../utils/firebase';
 import { toast } from 'react-toastify';
 
-const LayoutHeader = ({ currentPage, setCurrentPage, setShowLoginModal }) => {
+const LayoutHeader = ({ currentPage, setCurrentPage, setShowLoginModal, hideShadow = false }) => {
   const { currentUser, currentUserData } = useAuth();
   
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -76,7 +76,7 @@ const LayoutHeader = ({ currentPage, setCurrentPage, setShowLoginModal }) => {
   }
 
   return (
-    <header className="bg-white shadow-sm fixed top-0 left-0 right-0 z-30"> {/* Ajustado z-index si es necesario */}
+     <header className={`bg-white fixed top-0 left-0 right-0 z-30 ${!hideShadow ? 'shadow-sm' : ''}`}>
       <div className="container mx-auto px-4 py-3">
         <div className="flex justify-between items-center">
           <h1
