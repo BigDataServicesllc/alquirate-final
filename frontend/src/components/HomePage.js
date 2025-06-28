@@ -67,7 +67,7 @@ const handleCalificarClick = () => {
 };
 
   return (
-    <div className="pt-16">
+    <div>
       {/* --- SECCIÓN HERO (Tu código original) --- */}
       <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20 px-4">
         <motion.div
