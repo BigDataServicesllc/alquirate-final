@@ -310,7 +310,7 @@ const AddReviewPage = ({ setCurrentPage }) => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-12 lg:py-20">
+    <div className="container mx-auto px-4 py-8 md:py-12 lg:pb-20">
       <div className="max-w-2xl mx-auto">
         <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 md:mb-8 text-center">
           Califica tu experiencia de alquiler

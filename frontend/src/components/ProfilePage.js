@@ -117,7 +117,7 @@ const ProfilePage = () => {
   }
 
   if (!currentUser) {
-    return <div className="text-center py-20">Por favor, inicia sesión para ver tu perfil.</div>;
+    return <div className="text-center pb-20">Por favor, inicia sesión para ver tu perfil.</div>;
   }
 
   return (

@@ -180,17 +180,22 @@ const handleRegister = async (formData) => {
     }
   };
 
-  return (
+ return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <LayoutHeader
         currentPage={currentPage}
         setCurrentPage={navigateTo}
         setShowLoginModal={setShowLoginModal}
       />
-      <main className="flex-grow pt-20"> {/* <--- ¡AQUÍ ESTÁ EL CAMBIO! */}
+      
+      {currentPage !== 'home' && <div className="h-20" />}
+      
+      <main className="flex-grow">
         {loadingAuth ? (<div>Cargando aplicación...</div>) : renderPage()}
       </main>
+
       <LayoutFooter setCurrentPage={navigateTo} />
+      
       {showLoginModal && (
         <LoginModal
           onClose={() => setShowLoginModal(false)}

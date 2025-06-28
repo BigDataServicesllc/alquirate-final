@@ -174,7 +174,7 @@ const RankingsPage = ({ onLocalityClick }) => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-20">
+    <div className="container mx-auto px-4 pb-20">
       <h1 className="text-3xl font-bold text-gray-800 mb-8">Rankings de Precios por Ubicación</h1>
       <div className="bg-white rounded-xl shadow-md p-6 mb-8">
         <div className="grid grid-cols-1">
@@ -234,7 +234,7 @@ const RankingsPage = ({ onLocalityClick }) => {
           )}
         </div>
       )}
-      <div className="container mx-auto px-4 py-20">
+      <div className="container mx-auto px-4 pb-20">
       {/* ... (todo tu JSX anterior: h1, selectores, tabla, paginación) ... */}
       
       {selectedProvinceId && (

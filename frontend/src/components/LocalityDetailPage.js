@@ -190,7 +190,7 @@ const LocalityDetailPage = ({ localityId, onBack }) => { // <--- Asegúrate que 
   console.log('Datos de la localidad recibidos:', localityData);
   // Reemplaza todo el bloque `return` de tu componente con esto:
 return (
-    <div className="container mx-auto px-4 py-12 md:py-20">
+    <div className="container mx-auto px-4 py-12 md:pb-20">
       {onBack && (
         <button onClick={onBack} className="mb-8 text-blue-600 hover:underline">
           ← Volver a los Rankings
