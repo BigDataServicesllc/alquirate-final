@@ -78,7 +78,7 @@ const RankingsPage = ({ onLocalityClick }) => {
       const snapshot = await getDocs(rankingsQuery);
       
       const precalculatedRankings = snapshot.docs.map(doc => ({
-        localityId: doc.id,
+        id: doc.id,
         ...doc.data()
       }));
 
@@ -160,9 +160,9 @@ const RankingsPage = ({ onLocalityClick }) => {
       );
     }
     return paginatedData.map((item) => (
-      <tr key={item.localityId} className="hover:bg-gray-50">
+      <tr key={item.id} className="hover:bg-gray-50">
         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600 hover:text-blue-800">
-          <button onClick={() => onLocalityClick(item.localityId)} className="text-blue-600 hover:text-blue-800 hover:underline text-left w-full">
+          <button onClick={() => onLocalityClick(item.id)} className="text-blue-600 hover:text-blue-800 hover:underline text-left w-full">
             {item.localityName}
           </button>
         </td>
