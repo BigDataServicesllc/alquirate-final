@@ -187,7 +187,7 @@ const handleRegister = async (formData) => {
         setCurrentPage={navigateTo}
         setShowLoginModal={setShowLoginModal}
       />
-      <main className="flex-grow">
+      <main className="flex-grow pt-20"> {/* <--- ¡AQUÍ ESTÁ EL CAMBIO! */}
         {loadingAuth ? (<div>Cargando aplicación...</div>) : renderPage()}
       </main>
       <LayoutFooter setCurrentPage={navigateTo} />
